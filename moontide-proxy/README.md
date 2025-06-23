@@ -36,7 +36,7 @@ GET /api/noaa?url=<NOAA_FULL_URL>
 GET /api/zip-lookup?zip=<ZIPCODE>
 ```
 
-This endpoint forwards the request to `https://api.zippopotam.us/us/<ZIPCODE>` and returns the JSON response.
+This endpoint queries the external ZIP service and returns the JSON response.
 
 ### Example
 

@@ -1,7 +1,7 @@
 import { safeLocalStorage } from '@/utils/localStorage';
 import { cacheService } from '@/services/cacheService';
 
-/** zippopotam.us response shape (minimal) */
+/** /api/zip-lookup response shape (compatible with zippopotam.us) */
 interface ZipApiResponse {
   'post code': string;
   country: string;
