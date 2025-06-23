@@ -24,11 +24,19 @@ The server will run on `http://localhost:3001` by default.
 
 ## Usage
 
-The proxy exposes a single endpoint:
+The proxy exposes two endpoints:
 
 ```
 GET /api/noaa?url=<NOAA_FULL_URL>
 ```
+
+### ZIP Code Lookup
+
+```
+GET /api/zip-lookup?zip=<ZIPCODE>
+```
+
+This endpoint forwards the request to `https://api.zippopotam.us/us/<ZIPCODE>` and returns the JSON response.
 
 ### Example
 
