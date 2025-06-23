@@ -7,7 +7,7 @@ interface GeocodeResult {
   state: string;
 }
 
-const GEOCODING_API_BASE = 'https://api.zippopotam.us/us/';
+const GEOCODING_API_BASE = '/api/zip-lookup?zip=';
 const ZIP_CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 const CITY_CACHE_TTL = 24 * 60 * 60 * 1000; // 1 day
 
@@ -24,9 +24,9 @@ export async function getCoordinatesForZip(zipCode: string): Promise<GeocodeResu
   }
   
   
-  // Try the free geocoding API
+  // Query the backend for ZIP geocoding
   try {
-    console.log(`🌐 Fetching coordinates from geocoding API for ZIP: ${zipCode}`);
+    console.log(`🌐 Fetching coordinates from backend API for ZIP: ${zipCode}`);
     const response = await fetch(`${GEOCODING_API_BASE}${zipCode}`);
     
     if (!response.ok) {
