@@ -72,8 +72,8 @@ export const lookupZipCode = async (
 
   // ── 3. REMOTE LOOK-UP ────────────────────────────────────
   try {
-    console.log(`🌐 Fetching ZIP ${cleanZip} from remote API`);
-    const res = await fetch(`https://api.zippopotam.us/us/${cleanZip}`);
+    console.log(`🌐 Fetching ZIP ${cleanZip} from backend API`);
+    const res = await fetch(`/api/zip-lookup?zip=${cleanZip}`);
     if (!res.ok) return null;
 
     const data = (await res.json()) as ZipApiResponse;
