@@ -1,6 +1,13 @@
 // src/services/tide/stationService.ts
 import { cacheService } from '../cacheService';
 
+/**
+ * Base URL for the backend API. In development the Vite dev server
+ * proxies calls so this can be blank. In production (e.g. the Capacitor
+ * build) it should point to the deployed proxy server.
+ */
+const API_BASE = import.meta.env.VITE_API_BASE || '';
+
 const STATION_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
 export interface Station {
@@ -24,7 +31,7 @@ export async function getStationsForLocation(
   if (cached) return cached;
 
   const response = await fetch(
-    `/noaa-stations?locationInput=${encodeURIComponent(userInput)}`
+    `${API_BASE}/noaa-stations?locationInput=${encodeURIComponent(userInput)}`
   );
   if (!response.ok) throw new Error('Unable to fetch station list.');
 
@@ -40,7 +47,7 @@ export async function getStationById(id: string): Promise<Station | null> {
   const cached = cacheService.get<Station>(key);
   if (cached) return cached;
 
-  const response = await fetch(`/noaa-station/${id}`);
+  const response = await fetch(`${API_BASE}/noaa-station/${id}`);
   if (!response.ok) throw new Error('Unable to fetch station');
 
   const data = await response.json();

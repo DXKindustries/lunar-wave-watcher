@@ -3,6 +3,13 @@
 //  Fetch 7-day tide data for the given NOAA station
 //--------------------------------------------------------------
 
+/**
+ * Base URL for the backend API. Vite injects the value from the build
+ * environment. During development we rely on the dev server proxy so
+ * this can be empty.
+ */
+const API_BASE = import.meta.env.VITE_API_BASE || '';
+
 export interface Prediction {
   /** ISO date-time in the station’s local time zone (e.g. “2025-06-25T04:36:00”) */
   timeIso: string;
@@ -24,7 +31,9 @@ export async function getTideData(
   }
 
   /* --- hit our proxy ------------------------------------------------------ */
-  const resp = await fetch(`/tides?stationId=${stationId}&date=${yyyymmdd}`);
+  const resp = await fetch(
+    `${API_BASE}/tides?stationId=${stationId}&date=${yyyymmdd}`
+  );
   if (!resp.ok) throw new Error('Unable to fetch tide data');
 
   const raw = await resp.json();
