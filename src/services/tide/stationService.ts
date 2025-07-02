@@ -3,7 +3,6 @@ import { cacheService } from '../cacheService';
 
 const STATION_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
-
 export interface Station {
   id: string;
   name: string;
