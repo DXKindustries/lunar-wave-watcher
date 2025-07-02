@@ -1,8 +1,15 @@
 // src/services/tide/stationService.ts
-
 import { cacheService } from '../cacheService';
 
 const STATION_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+/**
+ * 🔗 Your live backend (or proxy) endpoint.
+ * - If you already deploy a Cloud-Function / Worker that serves
+ *   /noaa-stations and /noaa-station, put its full HTTPS origin here.
+ * - Example below uses a placeholder domain — replace with yours.
+ */
+const API_BASE = 'https://moontide-api.dkindustries.com';
 
 export interface Station {
   id: string;
@@ -22,16 +29,16 @@ export async function getStationsForLocation(
   const key = `stations:${userInput.toLowerCase()}`;
 
   const cached = cacheService.get<Station[]>(key);
-  if (cached) {
-    return cached;
-  }
+  if (cached) return cached;
 
   const response = await fetch(
-    `/noaa-stations?locationInput=${encodeURIComponent(userInput)}`
+    `${API_BASE}/noaa-stations?locationInput=${encodeURIComponent(userInput)}`
   );
-  if (!response.ok) throw new Error("Unable to fetch station list.");
+  if (!response.ok) throw new Error('Unable to fetch station list.');
+
   const data = await response.json();
-  const stations = data.stations || [];
+  const stations: Station[] = data.stations || [];
+
   cacheService.set(key, stations, STATION_CACHE_TTL);
   return stations;
 }
@@ -41,10 +48,12 @@ export async function getStationById(id: string): Promise<Station | null> {
   const cached = cacheService.get<Station>(key);
   if (cached) return cached;
 
-  const response = await fetch(`/noaa-station/${id}`);
+  const response = await fetch(`${API_BASE}/noaa-station/${id}`);
   if (!response.ok) throw new Error('Unable to fetch station');
+
   const data = await response.json();
   if (!data.station) return null;
+
   const station: Station = {
     id: data.station.id,
     name: data.station.name,
@@ -52,6 +61,7 @@ export async function getStationById(id: string): Promise<Station | null> {
     longitude: data.station.longitude,
     state: data.station.state,
   };
+
   cacheService.set(key, station, STATION_CACHE_TTL);
   return station;
 }
