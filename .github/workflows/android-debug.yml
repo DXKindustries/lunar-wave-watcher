@@ -3,7 +3,7 @@ name: Android Debug APK
 on:
   workflow_dispatch:       # run manually
   push:
-    branches: [ main ]     # or whenever you push to main
+    branches: [ main ]     # run on every push to main
 
 jobs:
   build:
@@ -13,10 +13,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Node 18
+      # Capacitor needs Node ≥20
+      - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      # Gradle will compile with source/target 21, so add JDK 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Install JS deps
         run: npm ci
