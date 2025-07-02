@@ -3,13 +3,6 @@ import { cacheService } from '../cacheService';
 
 const STATION_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
-/**
- * 🔗 Your live backend (or proxy) endpoint.
- * - If you already deploy a Cloud-Function / Worker that serves
- *   /noaa-stations and /noaa-station, put its full HTTPS origin here.
- * - Example below uses a placeholder domain — replace with yours.
- */
-const API_BASE = 'https://moontide-api.dkindustries.com';
 
 export interface Station {
   id: string;
@@ -32,7 +25,7 @@ export async function getStationsForLocation(
   if (cached) return cached;
 
   const response = await fetch(
-    `${API_BASE}/noaa-stations?locationInput=${encodeURIComponent(userInput)}`
+    `/noaa-stations?locationInput=${encodeURIComponent(userInput)}`
   );
   if (!response.ok) throw new Error('Unable to fetch station list.');
 
@@ -48,7 +41,7 @@ export async function getStationById(id: string): Promise<Station | null> {
   const cached = cacheService.get<Station>(key);
   if (cached) return cached;
 
-  const response = await fetch(`${API_BASE}/noaa-station/${id}`);
+  const response = await fetch(`/noaa-station/${id}`);
   if (!response.ok) throw new Error('Unable to fetch station');
 
   const data = await response.json();
